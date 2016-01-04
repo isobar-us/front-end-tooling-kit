@@ -1,0 +1,22 @@
+# Machine
+.DS_Store
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Dependency directory
+/node_modules
+
+# Users Environment Variables
+*.iml
+.lock-wscript
+.project
+/.idea
+/data
+/dist
