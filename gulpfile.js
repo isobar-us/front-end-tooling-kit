@@ -13,35 +13,26 @@ var webpackDevConfig = require('./webpack.dev.js');
 var webpackProdConfig = require('./webpack.prod.js');
 
 var APP_SRC     = './app';
-var APP_DIST    = './dist';
+var APP_DIST    = './app/public';
 var SASS_SRC    = APP_SRC + '/sass/**/*.scss';
 var SASS_DIST   = APP_DIST + '/css';
 var SCRIPTS_SRC = APP_SRC + '/scripts/**/*.+(js|jsx)';
 var IMG_SRC     = APP_SRC + '/images/**/*.+(png|jpg|gif|svg|ico)';
-var IMG_DIST    = APP_DIST + '/images';
+var IMG_DIST    = APP_DIST + '/img';
 var FONTS_SRC   = APP_SRC + '/fonts/**/*';
 var FONTS_DIST  = APP_DIST + '/fonts';
 
 gulp.task('sass:dev', function () {
-  var sassOptions = {
-    outputStyle: 'expanded',
-    sourceComments: true
-  };
-  gulp.src(SASS_SRC)
+  return gulp.src(SASS_SRC)
     .pipe(sourcemaps.init())
-    .pipe(sass(sassOptions))
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass({outputStyle: 'expanded', sourceComments: true}).on('error', sass.logError))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(SASS_DIST));
 });
 
 gulp.task('sass:prod', function () {
-  var sassOptions = {
-    outputStyle: 'compressed'
-  };
-  gulp.src(SASS_SRC)
-    .pipe(sass(sassOptions))
-    .pipe(sass().on('error', sass.logError))
+  return gulp.src(SASS_SRC)
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(gulp.dest(SASS_DIST));
 });
 

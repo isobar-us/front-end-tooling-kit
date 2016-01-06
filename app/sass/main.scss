@@ -1,3 +1,130 @@
 @charset "utf-8";
 
-//@import "_file.scss";
+@import "_reset.scss";
+
+/* BASE STYLES */
+
+html, body {
+  height: 100%;
+}
+html {
+  background: linear-gradient(#0063c9, #001539);
+  background-attachment: fixed;
+  font-size: 100%;
+  font-family: Sans-Serif; }
+a {
+  text-decoration: none; }
+#wrapper {
+  margin: 0 auto;
+  width: 960px;
+  position: relative;
+  background-color: #fff;
+  min-height: 100%; }
+header {
+  position: relative;
+  height: 91px; }
+header > div {
+  background: linear-gradient(rgba(102,102,102,0.2), #fff 40%);
+  height: 69px; }
+h1 {
+  width: 257px;
+  height: 38px;
+  position: absolute;
+  top: 14px;
+  left: 15px;
+  text-indent: -9999px;
+  background: transparent url(../img/logo.png) no-repeat;
+}
+nav {
+  height: 22px;
+  background-color: #202022;
+  text-transform: uppercase; }
+nav a {
+  font-family: 'Dosis';
+  font-weight: 700px;
+  font-size: 0.875em;
+  padding: 0 12px;
+  margin-left: 4px;
+  float: left;
+  line-height: 22px;
+  color: #fff; }
+nav a:hover {
+  background-color: #878787;
+}
+nav a.selected {
+  background-color: #0071cf;
+}
+#main {
+  padding: 33px 0 83px;
+  width: 795px; }
+aside {
+  position: absolute;
+  width: 165px;
+  top: 91px;
+  right: 0;
+  bottom: 0;
+  background-color: #f3f3f3;
+  font-size: 0.875em;
+  color: #666;
+  line-height: 1.5em; }
+aside div {
+  padding: 25px 0 0 15px; }
+aside a {
+  color: #0071cf;
+  display: block;
+}
+aside a.selected {
+  font-weight: bold;
+}
+.products {
+  margin-left: 90px;
+}
+.products li {
+  float: left;
+  width: 136px;
+  height: 189px;
+  margin-right: 25px;
+  text-align: center;
+  font-size: 0.875em;
+  font-weight: bold;
+}
+.products img {
+  height: 100px;
+  max-width: 100px;
+}
+.products a {
+  border: 2px solid transparent;
+  padding-top:7px;
+  color: #000;
+  display: block;
+}
+.products a:hover {
+  border-color: #0071cf;
+  border-radius: 5px;
+}
+.products h3,
+.products span {
+  display: block;
+  line-height: 1.25em;
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 960px;
+  height: 83px;
+  background-color: #ccc;
+  background: linear-gradient(#d6d6d6, #b4b4b4);
+  color: #333;
+  text-align: center;
+  font-size: 0.75em;
+}
+footer span {
+  display: block;
+  padding-top: 25px;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }

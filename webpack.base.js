@@ -1,15 +1,15 @@
 'use strict';
 
 module.exports = {
-  entry: './app/scripts/app.js',
+  entry: './app/scripts/main.js',
   eslint: {
     configFile: '.eslintrc.json',
     failOnWarning: true,
     failOnError: true
   },
   output: {
-    path: './dist/js/',
-    filename: 'bundle.js'
+    path: './app/public/js/',
+    filename: 'main.js'
   },
   module: {
     preLoaders: [
