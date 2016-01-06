@@ -23,25 +23,16 @@ var FONTS_SRC   = APP_SRC + '/fonts/**/*';
 var FONTS_DIST  = APP_DIST + '/fonts';
 
 gulp.task('sass:dev', function () {
-  var sassOptions = {
-    outputStyle: 'expanded',
-    sourceComments: true
-  };
-  gulp.src(SASS_SRC)
+  return gulp.src(SASS_SRC)
     .pipe(sourcemaps.init())
-    .pipe(sass(sassOptions))
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass({outputStyle: 'compressed', sourceComments: true}).on('error', sass.logError))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(SASS_DIST));
 });
 
 gulp.task('sass:prod', function () {
-  var sassOptions = {
-    outputStyle: 'compressed'
-  };
-  gulp.src(SASS_SRC)
-    .pipe(sass(sassOptions))
-    .pipe(sass().on('error', sass.logError))
+  return gulp.src(SASS_SRC)
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(gulp.dest(SASS_DIST));
 });
 
