@@ -9,6 +9,16 @@ function getNormalizedProp(prop) {
   return prop;
 }
 
+export function getSortObj(sort) {
+  const sortObj = {str: '', search:'', query: {}};
+  if (sort !== '') {
+    sortObj.str = sort;
+    sortObj.search = '?sort='+sort;
+    sortObj.query = {sort:sort};
+  }
+  return sortObj;
+}
+
 export function loadCategories(cbFn) {
   let store = getStore();
   store.dispatch({type:constants.LOAD_CATEGORIES});

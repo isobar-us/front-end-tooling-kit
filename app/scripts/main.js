@@ -8,9 +8,10 @@ import createHistory from 'history/lib/createBrowserHistory';
 let history = createHistory();
 
 // Require App Modules
-import Products from './products';
 import {makeStore} from './store';
 import {loadProducts} from './creators';
+import Wrapper from './layouts/wrapper';
+import Products from './components/products';
 
 // create store, prepopulate with server data
 let state = JSON.parse(decodeURI(window.__INITIAL_STATE__));
@@ -21,7 +22,11 @@ let App = React.createClass({
     loadProducts(props.params.categoryId, props.location.query.sort);
   },
   render: function() {
-    return (<Products />);
+    return (
+      <Wrapper>
+        {this.props.children}
+      </Wrapper>
+    );
   }
 });
 
