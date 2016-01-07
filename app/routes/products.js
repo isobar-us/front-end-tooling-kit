@@ -7,7 +7,7 @@ import Products from '../scripts/products';
 import constants from '../scripts/constants';
 import {makeStore} from '../scripts/store';
 import {loadStoreData} from '../scripts/isomorphic';
-import {loadCategories,loadProducts} from '../scripts/creators';
+import {loadCategories, loadProducts} from '../scripts/creators';
 
 const router = express.Router();
 

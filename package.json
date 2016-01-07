@@ -5,7 +5,7 @@
   "description": "",
   "scripts": {
     "build": "gulp build",
-    "start": "babel-node ./bin/www",
+    "start": "babel-node ./app/bin/www",
     "watch": "gulp watch"
   },
   "dependencies": {
