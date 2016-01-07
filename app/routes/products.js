@@ -2,9 +2,8 @@ import express from 'express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {Provider} from 'react-redux';
-import reducer from '../scripts/reducer';
-import Products from '../scripts/products';
-import constants from '../scripts/constants';
+import Products from '../scripts/components/products';
+import Wrapper from '../scripts/layouts/wrapper';
 import {makeStore} from '../scripts/store';
 import {loadStoreData} from '../scripts/isomorphic';
 import {loadCategories, loadProducts} from '../scripts/creators';
@@ -22,11 +21,13 @@ router.get('/:categoryId?', function(req, res, next) {
 	const store = makeStore();
 	loadStoreData(creators, function(){
 		let initialState = store.getState().toJS();
-		let markup = ReactDOMServer.renderToString(
-			<Provider store={store}>
-				<Products />
-			</Provider>
-		);
+    let markup = ReactDOMServer.renderToString(
+    	<Provider store={store}>
+    		<Wrapper>
+          <Products />
+        </Wrapper>
+    	</Provider>
+    );
 		res.render('home', {
 			markup: markup,
 			initialState: encodeURI(JSON.stringify(initialState)),
