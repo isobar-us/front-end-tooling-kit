@@ -25,6 +25,11 @@ npm install
 gulp watch
 ```
 
+How to run client side unit tests and code coverage.
+```
+npm test
+```
+
 ### For production
 
 ```
@@ -33,5 +38,4 @@ gulp build
 
 ### TODO's
 
-* Add a starter testing suite
 * Provide instructions for how to use as submodule in other projects
