@@ -9,6 +9,13 @@ function getNormalizedProp(prop) {
   return prop;
 }
 
+// let store = getStore();
+//store.on(constants.URL_CHANGE, function(state){
+//  state = state.toJS();
+//  if (!state.categories) loadCategories();
+//  loadProducts(state.params.categoryId, state.query.sort);
+//});
+
 export function getSortObj(sort) {
   const sortObj = {str: '', search:'', query: {}};
   if (sort !== '') {
@@ -17,6 +24,13 @@ export function getSortObj(sort) {
     sortObj.query = {sort:sort};
   }
   return sortObj;
+}
+
+export function setUrlState(params, query, cbFn) {
+  store.dispatch({type:constants.URL_CHANGE, params:params, query:query});
+  if (typeof cbFn === 'function') cbFn();
+  // alt
+  // store.dispatch({type:constants.URL_CHANGE, params:params, query:query, cbFn:cbFn});
 }
 
 export function loadCategories(cbFn) {

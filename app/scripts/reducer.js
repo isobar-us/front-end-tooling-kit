@@ -3,6 +3,8 @@ import constants from './constants';
 
 export default function reducer(state = Map(), action) {
   switch (action.type) {
+    case constants.URL_CHANGE:
+      return state.set('url', Map({params:action.params, query:action.query}));
     case constants.LOAD_CATEGORIES:
       return state.set('categories', Map({items:[], loading:true}));
     case constants.LOAD_PRODUCTS:
