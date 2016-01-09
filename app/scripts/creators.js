@@ -3,18 +3,21 @@ import constants from './constants';
 import {getStore} from './store';
 
 let productsReq = null;
+let currentPath;
 
 function getNormalizedProp(prop) {
   if (typeof prop === 'undefined') prop = '';
   return prop;
 }
 
-// let store = getStore();
-//store.on(constants.URL_CHANGE, function(state){
-//  state = state.toJS();
-//  if (!state.categories) loadCategories();
-//  loadProducts(state.params.categoryId, state.query.sort);
-//});
+function getNormalizedPath(path) {
+  let pathLen = path.length;
+  let lastChar = path.indexOf(pathLen-1);
+  if (lastChar === '/') {
+    path = path.substring(0, (pathLen-2));
+  }
+  return path;
+}
 
 export function getSortObj(sort) {
   const sortObj = {str: '', search:'', query: {}};
@@ -26,8 +29,30 @@ export function getSortObj(sort) {
   return sortObj;
 }
 
-export function setUrlState(params, query, cbFn) {
-  store.dispatch({type:constants.URL_CHANGE, params:params, query:query});
+function onStoreChange() {
+  let store = getStore();
+  let state = store.getState().toJS();
+  console.log('store.subscribe cb');
+  console.log('currentPath='+currentPath);
+  console.log(state);
+  if (state.url.path !== currentPath) {
+    console.log('=======LOAD PRODUCTS=======');
+    currentPath = state.url.path;
+    //if (!state.categories) loadCategories();
+    loadProducts(state.url.params.categoryId, state.url.query.sort);
+  }
+}
+
+export function bindStoreChange(path) {
+  currentPath = path;
+  let store = getStore();
+  store.subscribe(onStoreChange);
+}
+
+export function setUrlState(params, query, path, cbFn) {
+  path = getNormalizedPath(path);
+  let store = getStore();
+  store.dispatch({type:constants.URL_CHANGE, params:params, query:query, path:path});
   if (typeof cbFn === 'function') cbFn();
   // alt
   // store.dispatch({type:constants.URL_CHANGE, params:params, query:query, cbFn:cbFn});
