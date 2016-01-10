@@ -39,4 +39,4 @@ ReactDOM.render((
       </Route>
     </Router>
   </Provider>
-), document.body);
+), document.getElementById("container"));

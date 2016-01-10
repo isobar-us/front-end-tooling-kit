@@ -32,13 +32,8 @@ export function getSortObj(sort) {
 function onStoreChange() {
   let store = getStore();
   let state = store.getState().toJS();
-  console.log('store.subscribe cb');
-  console.log('currentPath='+currentPath);
-  console.log(state);
   if (state.url.path !== currentPath) {
-    console.log('=======LOAD PRODUCTS=======');
     currentPath = state.url.path;
-    //if (!state.categories) loadCategories();
     loadProducts(state.url.params.categoryId, state.url.query.sort);
   }
 }
@@ -54,8 +49,6 @@ export function setUrlState(params, query, path, cbFn) {
   let store = getStore();
   store.dispatch({type:constants.URL_CHANGE, params:params, query:query, path:path});
   if (typeof cbFn === 'function') cbFn();
-  // alt
-  // store.dispatch({type:constants.URL_CHANGE, params:params, query:query, cbFn:cbFn});
 }
 
 export function loadCategories(cbFn) {

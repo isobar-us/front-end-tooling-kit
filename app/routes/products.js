@@ -17,7 +17,6 @@ router.get('/:categoryId?', function(req, res, next) {
 	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) sort = '';
 
 	// create a data store, retrieve data, render markup
-	//const creators = [{fn:loadCategories}, {fn:loadProducts, data:[categoryId, sort]}];
   const creators = [{fn:loadCategories}, {fn:loadProducts, data:[categoryId, sort]}, {fn:setUrlState, data:[req.params, req.query, req.baseUrl]}]; // req.originalUrl;
 	const store = makeStore();
 	loadStoreData(creators, function(){
