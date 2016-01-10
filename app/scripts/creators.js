@@ -12,7 +12,7 @@ function getNormalizedProp(prop) {
 
 function getNormalizedPath(path) {
   let pathLen = path.length;
-  let lastChar = path.indexOf(pathLen-1);
+  let lastChar = path.charAt(pathLen-1);
   if (lastChar === '/') {
     path = path.substring(0, (pathLen-2));
   }

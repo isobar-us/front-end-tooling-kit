@@ -20,7 +20,8 @@ bindStoreChange(state.url.path);
 
 let App = React.createClass({
   componentWillReceiveProps: function(props){
-    setUrlState(props.params, props.location.query, props.location.pathname);
+    let path = props.location.pathname + props.location.search;
+    setUrlState(props.params, props.location.query, path);
   },
   render: function() {
     return (
