@@ -16,6 +16,10 @@ export function unsubscribe(id) {
   subscribers[id] = null;
 }
 
+export function hasSubscribers() {
+  return ((subscribers.length !== 0) ? true : false);
+}
+
 export function publish(path, params, query, callbackFn) {
   if (subscribers.length) {
     allSubscribersReady = callbackFn;

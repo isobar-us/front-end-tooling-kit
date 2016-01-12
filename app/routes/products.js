@@ -6,19 +6,30 @@ import {RoutingContext, match} from 'react-router';
 import {Map} from 'immutable';
 import createLocation from 'history/lib/createLocation';
 import {makeStore} from '../scripts/store';
-import {loadStoreData, publish} from '../scripts/isomorphic';
+import {hasSubscribers, publish} from '../scripts/isomorphic';
 import {routes} from '../scripts/routes';
 
 const router = express.Router();
 
 router.get('/:categoryId?', function(req, res, next) {
 
-	// create a data store with current url info
-	const store = makeStore( Map({url:Map({params:req.params, query:req.query, path:req.originalUrl})}) );
+	function renderError(status, message) {
+    res.status(status);
+    res.render('error', {
+      message: message,
+      error: {}
+    });
+  }
 
-  // first mount components based on route to identify which require async loading
-  let location = createLocation(req.originalUrl);
-  match({routes, location}, (error, redirectLocation, renderProps) => {
+  function renderSuccess(markup, initialState) {
+    res.render('home', {
+      markup: markup,
+      initialState: encodeURI(JSON.stringify(initialState)),
+      title: 'Express App'
+    });
+  }
+
+  function getMarkupAsString(renderProps, store) {
     let initialElement = (
       <RoutingContext {...renderProps} />
     );
@@ -27,38 +38,33 @@ router.get('/:categoryId?', function(req, res, next) {
         {initialElement}
       </Provider>
     );
-    // in theory if we have no matching route, or we have no async subscribers
-    // we could render html here...
-    //if (error) {
-    //  res.status(500).send(error.message)
-    //} else if (redirectLocation) {
-    //  res.redirect(302, redirectLocation.pathname + redirectLocation.search)
-    //} else if (renderProps) {
-    //  res.status(200).send(renderToString(<RouterContext {...renderProps} />))
-    //} else {
-    //  res.status(404).send('Not found')
-    //}
-  });
+    return markup;
+  }
 
-  // publish to components that require async loading
-  // when all our loaded, or if none subscribed, render final markup
-	publish(req.originalUrl, req.params, req.query, function(){
-    let initialState = store.getState().toJS();
-    match({routes, location}, (error, redirectLocation, renderProps) => {
-      let initialElement = (
-        <RoutingContext {...renderProps} />
-      );
-      let markup = ReactDOMServer.renderToString(
-        <Provider store={store}>
-          {initialElement}
-        </Provider>
-      );
-      res.render('home', {
-        markup: markup,
-        initialState: encodeURI(JSON.stringify(initialState)),
-        title: 'Express App'
-      });
-    });
+  // first mount components based on route to identify which require async loading
+  let location = createLocation(req.originalUrl);
+  match({routes, location}, (error, redirectLocation, renderProps) => {
+    if (error) {
+      renderError(500, error.message);
+    } else if (redirectLocation) {
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
+      // generate markup based on route. if any components have async data they will start to load.
+      // if there were subscribers, set up a publish callback to regenerate markup once loads are complete
+      // else if none subscribed, render final markup
+      // create a data store with current url info
+      let store = makeStore( Map({url:Map({params:req.params, query:req.query, path:req.originalUrl})}) );
+      let markup = getMarkupAsString(renderProps, store);
+      if (hasSubscribers()) {
+        publish(req.originalUrl, req.params, req.query, function(){
+          renderSuccess(getMarkupAsString(renderProps, store), store.getState().toJS());
+        });
+      } else {
+        renderSuccess(markup, store.getState().toJS());
+      }
+    } else {
+      renderError(404, 'Not Found');
+    }
   });
 
 });
