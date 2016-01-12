@@ -1,21 +1,28 @@
-let creatorsCt = 0;
-let creatorsReadyCt = 0;
-let allCreatorsReady = function(){};
+let subscribers = [];
+let subscribersReadyCt = 0;
+let allSubscribersReady = function(){};
 
-function creatorReady () {
-  creatorsReadyCt++;
-  if (creatorsReadyCt === creatorsCt) allCreatorsReady();
+function subscriberReady () {
+  subscribersReadyCt++;
+  if (subscribersReadyCt === subscribers.length) allSubscribersReady();
 }
 
-// Loop through and dispatch all actions passed in required to render on server
-export function loadStoreData(creators, callbackFn ) {
-  allCreatorsReady = callbackFn;
-  creators.forEach((creator) => {
-    creatorsCt++;
-    if (typeof creator.data === 'object' && creator.data.length) {
-      creator.fn(...creator.data, creatorReady);
-    } else {
-      creator.fn(creatorReady);
-    }
-  });
+export function subscribe(fn) {
+  subscribers.push(fn);
+  return subscribers.length;
+}
+
+export function unsubscribe(id) {
+  subscribers[id] = null;
+}
+
+export function publish(path, params, query, callbackFn) {
+  if (subscribers.length) {
+    allSubscribersReady = callbackFn;
+    subscribers.forEach(fn => {
+      if (typeof fn === 'function') fn(path, params, query, subscriberReady);
+    });
+  } else {
+    callbackFn();
+  }
 }

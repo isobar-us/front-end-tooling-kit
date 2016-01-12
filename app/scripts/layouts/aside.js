@@ -6,7 +6,6 @@ import SortList from '../components/sortList';
 
 let Aside = React.createClass({
   mixins: [PureRenderMixin],
-
   render: function() {
     const sortObj = getSortObj(this.props.sort);
     return (
@@ -20,8 +19,8 @@ let Aside = React.createClass({
 function select(state) {
   state = state.toJS();
   return {
-    categoryId: state.products.categoryId,
-    sort: state.products.sort
+    categoryId: ((state.products) ? state.products.categoryId : ''),
+    sort: ((state.products) ? state.products.sort : '')
   };
 }
 
