@@ -1,9 +1,11 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
+import {connect} from 'react-redux'
 import {Link} from 'react-router';
 import constants from '../constants';
+import {getSortObj} from '../creators';
 
-export default React.createClass({
+let SortList = React.createClass({
   mixins: [PureRenderMixin],
   render: function() {
     let href = '/products/';
@@ -11,7 +13,7 @@ export default React.createClass({
     if (this.props.categoryId !== '') {
       href = href + this.props.categoryId;
     }
-    switch (this.props.sortObj.str) {
+    switch (getSortObj(this.props.sort).str) {
       case 'priceasc':
         sortClasses.priceasc = constants.SELECTED;
         break;
@@ -31,3 +33,13 @@ export default React.createClass({
     );
   }
 });
+
+function select(state) {
+  state = state.toJS();
+  return {
+    categoryId: ((state.products) ? state.products.categoryId : ''),
+    sort: ((state.products) ? state.products.sort : '')
+  };
+}
+
+export default connect(select)(SortList);

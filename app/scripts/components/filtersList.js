@@ -1,6 +1,9 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
+import {connect} from 'react-redux';
 import {Link} from 'react-router';
+import {getSortObj, loadCategories} from '../creators';
+import {subscribe, unsubscribe} from '../isomorphic';
 import constants from '../constants';
 
 let FilterItem = React.createClass({
@@ -15,11 +18,19 @@ let FilterItem = React.createClass({
   }
 });
 
-export default React.createClass({
+let FiltersList = React.createClass({
   mixins: [PureRenderMixin],
+  componentWillMount: function() {
+    this.subscribeId = subscribe((path, params, query, callbackFn) => {
+      loadCategories(callbackFn);
+    });
+  },
+  componentDidMount: function() {
+    unsubscribe(this.subscribeId);
+  },
   render: function() {
     let items = [];
-    const sortObj = this.props.sortObj;
+    const sortObj = getSortObj(this.props.sort);
     const href = '/products/';
     const categoryId = this.props.categoryId;
     const allClassName = (categoryId === '') ? constants.SELECTED : '';
@@ -35,3 +46,14 @@ export default React.createClass({
     );
   }
 });
+
+function select(state) {
+  state = state.toJS();
+  return {
+    categories: ((state.categories) ? state.categories.items : []),
+    categoryId: ((state.products) ? state.products.categoryId : ''),
+    sort: ((state.products) ? state.products.sort : '')
+  };
+}
+
+export default connect(select)(FiltersList);
