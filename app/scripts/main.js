@@ -14,7 +14,11 @@ import {routes} from './routes';
 
 // create store, prepopulate with server data
 let state = JSON.parse(decodeURI(window.__INITIAL_STATE__));
-let store = makeStore( Map({categories:Map(state.categories), products:Map(state.products), url:Map(state.url)}) );
+let immutableState = Map();
+Object.keys(state).forEach(key => {
+  immutableState = immutableState.set(key, Map(state[key]));
+});
+let store = makeStore(immutableState);
 bindStoreChange(state.url.path);
 
 ReactDOM.render((

@@ -6,7 +6,7 @@ import {RoutingContext, match} from 'react-router';
 import {Map} from 'immutable';
 import createLocation from 'history/lib/createLocation';
 import {makeStore} from '../scripts/store';
-import {hasSubscribers, publish} from '../scripts/isomorphic';
+import {hasSubscribers, publish, reset} from '../scripts/isomorphic';
 import {routes} from '../scripts/routes';
 
 const router = express.Router();
@@ -49,6 +49,7 @@ router.get('/:categoryId?', function(req, res, next) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
+      reset();
       // generate markup based on route. if any components have async data they will start to load.
       // if there were subscribers, set up a publish callback to regenerate markup once loads are complete
       // else if none subscribed, render final markup

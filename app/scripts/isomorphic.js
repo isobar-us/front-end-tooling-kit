@@ -7,6 +7,11 @@ function subscriberReady () {
   if (subscribersReadyCt === subscribers.length) allSubscribersReady();
 }
 
+export function reset() {
+  subscribers = [];
+  subscribersReadyCt = 0;
+}
+
 export function subscribe(fn) {
   subscribers.push(fn);
   return subscribers.length;
