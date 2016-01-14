@@ -1,8 +1,9 @@
 import React from 'react';
-import {Route} from 'react-router';
+import {Route, IndexRoute} from 'react-router';
 
 // Require App Modules
 import Wrapper from './layouts/wrapper';
+import Home from './components/home';
 import Products from './components/products/component';
 import constants from './constants';
 import {getStore} from './store';
@@ -13,7 +14,7 @@ function getNormalizedPath(path) {
   let pathLen = path.length;
   let lastChar = path.charAt(pathLen-1);
   if (lastChar === '/') {
-    path = path.substring(0, (pathLen-2));
+    path = path.substring(0, (pathLen-1));
   }
   return path;
 }
@@ -39,6 +40,7 @@ let App = React.createClass({
 
 export let routes = (
   <Route component={App} path="/">
+    <IndexRoute component={Home} />
     <Route component={Products} path="products(/:categoryId)"/>
   </Route>
 );

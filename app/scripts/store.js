@@ -5,7 +5,7 @@ import reducer from './reducer';
 let store;
 
 export function makeStore(initialState = Map()) {
-  store = createStore(reducer, initialState)
+  store = createStore(reducer, initialState);
   return store;
 }
 

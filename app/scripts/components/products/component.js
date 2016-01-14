@@ -34,6 +34,8 @@ let Products = React.createClass({
   componentDidMount: function() {
     iso.unsubscribeAsyncFn(this.subscribeId);
     let store = getStore();
+    let state = store.getState().toJS();
+    if (!state.products) loadProducts(state.url.params.categoryId, state.url.query.sort);
     store.subscribe(() => {
       let state = store.getState().toJS();
       loadProducts(state.url.params.categoryId, state.url.query.sort);
