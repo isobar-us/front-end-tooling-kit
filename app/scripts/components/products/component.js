@@ -1,8 +1,8 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
-import {subscribe, unsubscribe} from '../isomorphic';
-import {loadProducts} from '../creators';
+import {subscribe, unsubscribe} from '../../isomorphic';
+import {loadProducts} from './actionCreators';
 
 let ProductItem = React.createClass({
   mixins: [PureRenderMixin],

@@ -4,7 +4,7 @@ import {Route} from 'react-router';
 // Require App Modules
 import {setUrlState} from './creators';
 import Wrapper from './layouts/wrapper';
-import Products from './components/products';
+import Products from './components/products/component';
 
 let App = React.createClass({
   componentWillReceiveProps: function(props){
@@ -12,8 +12,6 @@ let App = React.createClass({
     setUrlState(props.params, props.location.query, path);
   },
   render: function() {
-    //console.log('App render...');
-    //console.log(this.props);
     return (
       <Wrapper>
         {this.props.children}
