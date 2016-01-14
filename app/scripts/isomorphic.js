@@ -7,31 +7,29 @@ function subscriberReady () {
   if (subscribersReadyCt === subscribers.length) allSubscribersReady();
 }
 
-export function reset() {
-  subscribers = [];
-  subscribersReadyCt = 0;
-}
-
-export function subscribe(fn) {
-  subscribers.push(fn);
-  return subscribers.length;
-}
-
-export function unsubscribe(id) {
-  subscribers[id] = null;
-}
-
-export function hasSubscribers() {
-  return ((subscribers.length !== 0) ? true : false);
-}
-
-export function publish(path, params, query, callbackFn) {
-  if (subscribers.length) {
-    allSubscribersReady = callbackFn;
-    subscribers.forEach(fn => {
-      if (typeof fn === 'function') fn(path, params, query, subscriberReady);
-    });
-  } else {
-    callbackFn();
+export default {
+  reset() {
+    subscribers = [];
+    subscribersReadyCt = 0;
+  },
+  subscribeAsyncFn(fn) {
+    subscribers.push(fn);
+    return subscribers.length;
+  },
+  unsubscribeAsyncFn(id) {
+    subscribers[id] = null;
+  },
+  hasAsyncFns() {
+    return ((subscribers.length !== 0) ? true : false);
+  },
+  doAsyncFns(path, params, query, callbackFn) {
+    if (subscribers.length) {
+      allSubscribersReady = callbackFn;
+      subscribers.forEach(fn => {
+        if (typeof fn === 'function') fn(path, params, query, subscriberReady);
+      });
+    } else {
+      callbackFn();
+    }
   }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import {subscribe, unsubscribe} from '../../isomorphic';
+import iso from '../../isomorphic';
 import constants from '../../constants';
 import {loadCategories} from './actionCreators';
 
@@ -21,12 +21,12 @@ let FilterItem = React.createClass({
 let FiltersList = React.createClass({
   mixins: [PureRenderMixin],
   componentWillMount: function() {
-    this.subscribeId = subscribe((path, params, query, callbackFn) => {
+    this.subscribeId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
       loadCategories(callbackFn);
     });
   },
   componentDidMount: function() {
-    unsubscribe(this.subscribeId);
+    iso.unsubscribeAsyncFn(this.subscribeId);
   },
   getSortObj: function(sort) {
     const sortObj = {str: '', search:'', query: {}};

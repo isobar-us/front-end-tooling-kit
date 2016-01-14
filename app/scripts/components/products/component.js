@@ -1,7 +1,7 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
-import {subscribe, unsubscribe} from '../../isomorphic';
+import iso from '../../isomorphic';
 import {getStore} from '../../store';
 import {loadProducts} from './actionCreators';
 
@@ -25,12 +25,12 @@ let ProductItem = React.createClass({
 let Products = React.createClass({
   mixins: [PureRenderMixin],
   componentWillMount: function() {
-    this.subscribeId = subscribe((path, params, query, callbackFn) => {
+    this.subscribeId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
       loadProducts(params.categoryId, query.sort, callbackFn);
     });
   },
   componentDidMount: function() {
-    unsubscribe(this.subscribeId);
+    iso.unsubscribeAsyncFn(this.subscribeId);
     let store = getStore();
     store.subscribe(() => {
       let state = store.getState().toJS();

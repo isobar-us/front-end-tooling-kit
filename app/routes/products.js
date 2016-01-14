@@ -6,7 +6,7 @@ import {RoutingContext, match} from 'react-router';
 import {Map} from 'immutable';
 import createLocation from 'history/lib/createLocation';
 import {makeStore} from '../scripts/store';
-import {hasSubscribers, publish, reset} from '../scripts/isomorphic';
+import iso from '../scripts/isomorphic';
 import {routes} from '../scripts/routes';
 
 const router = express.Router();
@@ -41,7 +41,6 @@ router.get('/:categoryId?', function(req, res, next) {
     return markup;
   }
 
-  // first mount components based on route to identify which require async loading
   let location = createLocation(req.originalUrl);
   match({routes, location}, (error, redirectLocation, renderProps) => {
     if (error) {
@@ -49,18 +48,20 @@ router.get('/:categoryId?', function(req, res, next) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
-      reset();
-      // generate markup based on route. if any components have async data they will start to load.
-      // if there were subscribers, set up a publish callback to regenerate markup once loads are complete
-      // else if none subscribed, render final markup
       // create a data store with current url info
       let store = makeStore( Map({url:Map({params:req.params, query:req.query, path:req.originalUrl})}) );
+      // reset any isomorphic subscribers from previous page load
+      iso.reset();
+      // generate markup based on route. if any components require async data they will subscribe to iso object.
       let markup = getMarkupAsString(renderProps, store);
-      if (hasSubscribers()) {
-        publish(req.originalUrl, req.params, req.query, function(){
+      // if there were subscribers, set up a doAsyncFns callback to regenerate markup once async loads are complete
+      if (iso.hasAsyncFns()) {
+        iso.doAsyncFns(req.originalUrl, req.params, req.query, function(){
           renderSuccess(getMarkupAsString(renderProps, store), store.getState().toJS());
         });
-      } else {
+      }
+      // else if no components require async loads, render final markup
+      else {
         renderSuccess(markup, store.getState().toJS());
       }
     } else {
