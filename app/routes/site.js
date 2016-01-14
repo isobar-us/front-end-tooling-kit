@@ -11,9 +11,9 @@ import {routes} from '../scripts/routes';
 
 const router = express.Router();
 
-router.get('/:categoryId?', function(req, res, next) {
+router.get('/:path?/:categoryId?', function(req, res, next) {
 
-	function renderError(status, message) {
+  function renderError(status, message) {
     res.status(status);
     res.render('error', {
       message: message,
@@ -71,4 +71,4 @@ router.get('/:categoryId?', function(req, res, next) {
 
 });
 
-module.exports = router;
+export {router as default};

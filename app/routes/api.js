@@ -1,26 +1,26 @@
-var express = require('express');
-var router = express.Router();
+import express from 'express';
+const router = express.Router();
 
 /* GET API listings. */
 router.get('/:collection/:itemId?', function(req, res, next) {
 
-	var key = req.params.collection;
+	const key = req.params.collection;
 
 	if ( (key === 'products') || (key === 'categories') ) {
 
-		var db = req.db;
-		var collection = db.get(key);
-		var findObj = {};
-		var opts = { sort:{name:1} };
+		let db = req.db;
+		let collection = db.get(key);
+    let findObj = {};
+    let opts = { sort:{name:1} };
 
 		if (key === 'products') {
 
-			var categoryId = req.params.itemId;
+      let categoryId = req.params.itemId;
 			if (typeof categoryId !== 'undefined') {
 				findObj = {'categories':parseInt(categoryId, 10)};
 			}
 
-			var sort = req.query.sort;
+      let sort = req.query.sort;
 			if ( (typeof sort !== 'undefined') && (sort.indexOf('price') === 0) )  {
 				if (sort === 'pricedesc') {
 					opts = { sort:{price:-1} };
@@ -39,4 +39,4 @@ router.get('/:collection/:itemId?', function(req, res, next) {
 
 });
 
-module.exports = router;
+export {router as default};
