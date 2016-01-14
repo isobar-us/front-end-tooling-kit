@@ -1,12 +1,10 @@
 import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux'
 import {Link} from 'react-router';
 import constants from '../constants';
 
-let SortList = React.createClass({
-  mixins: [PureRenderMixin],
-  render: function() {
+export default class SortList extends React.Component {
+  render() {
     let href = '/products/';
     let sortClasses = { alpha:'', priceasc:'', pricedesc:'' };
     if (this.props.categoryId !== '') {
@@ -31,7 +29,7 @@ let SortList = React.createClass({
       </div>
     );
   }
-});
+}
 
 function select(state) {
   state = state.toJS();

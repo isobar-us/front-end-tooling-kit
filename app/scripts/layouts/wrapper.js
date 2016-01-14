@@ -3,8 +3,8 @@ import Header from './header';
 import Aside from './aside';
 import Footer from './footer';
 
-export default React.createClass({
-  render: function() {
+export default class extends React.Component {
+  render() {
     return (
       <div id="wrapper">
         <Header />
@@ -18,4 +18,4 @@ export default React.createClass({
       </div>
     );
   }
-});
+}

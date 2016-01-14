@@ -1,10 +1,8 @@
 import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import FiltersList from '../components/filtersList/component';
 
-export default React.createClass({
-  mixins: [PureRenderMixin],
-  render: function() {
+export default class extends React.Component {
+  render() {
     return (
       <header>
         <div><h1>&#60;codetest&#62;</h1></div>
@@ -12,4 +10,4 @@ export default React.createClass({
       </header>
     );
   }
-});
+}

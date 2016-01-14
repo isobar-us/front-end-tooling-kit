@@ -1,14 +1,12 @@
 import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import SortList from '../components/sortList';
 
-export default React.createClass({
-  mixins: [PureRenderMixin],
-  render: function() {
+export default class extends React.Component {
+  render() {
     return (
       <aside>
         <SortList />
       </aside>
     );
   }
-});
+}

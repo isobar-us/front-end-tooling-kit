@@ -1,14 +1,12 @@
 import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import iso from '../../isomorphic';
 import {getStore} from '../../store';
 import {loadProducts} from './actionCreators';
 import {mountReducer} from './reducer';
 
-let ProductItem = React.createClass({
-  mixins: [PureRenderMixin],
-  render: function() {
+export class ProductItem extends React.Component {
+  render() {
     const image = '/img/'+this.props.product.image;
     const price = 'Price.......$'+this.props.product.price;
     return (
@@ -21,17 +19,16 @@ let ProductItem = React.createClass({
       </li>
     );
   }
-});
+}
 
-let Products = React.createClass({
-  mixins: [PureRenderMixin],
-  componentWillMount: function() {
+export class Products extends React.Component {
+  componentWillMount() {
     mountReducer();
     this.subscribeId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
       loadProducts(params.categoryId, query.sort, callbackFn);
     });
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     iso.unsubscribeAsyncFn(this.subscribeId);
     let store = getStore();
     let state = store.getState().toJS();
@@ -40,8 +37,8 @@ let Products = React.createClass({
       let state = store.getState().toJS();
       loadProducts(state.url.params.categoryId, state.url.query.sort);
     });
-  },
-  render: function() {
+  }
+  render() {
     let items = [];
     this.props.products.forEach(product => {
       items.push(<ProductItem key={product.id} product={product} />);
@@ -52,7 +49,7 @@ let Products = React.createClass({
       </ul>
     );
   }
-});
+}
 
 function select(state) {
   state = state.toJS();

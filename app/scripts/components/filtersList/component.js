@@ -1,5 +1,4 @@
 import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import iso from '../../isomorphic';
@@ -7,9 +6,8 @@ import constants from '../../constants';
 import {loadCategories} from './actionCreators';
 import {mountReducer} from './reducer';
 
-let FilterItem = React.createClass({
-  mixins: [PureRenderMixin],
-  render: function() {
+export class FilterItem extends React.Component {
+  render() {
     const category = this.props.category;
     const sortObj = this.props.sortObj;
     const href = '/products/'+category.id;
@@ -17,20 +15,20 @@ let FilterItem = React.createClass({
       <Link className={this.props.className} href={href+sortObj.search} query={sortObj.query} to={href}>{category.name}</Link>
     );
   }
-});
+}
 
-let FiltersList = React.createClass({
-  mixins: [PureRenderMixin],
-  componentWillMount: function() {
+export class FiltersList extends React.Component {
+  componentWillMount() {
     mountReducer();
     this.subscribeId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
       loadCategories(callbackFn);
     });
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     iso.unsubscribeAsyncFn(this.subscribeId);
-  },
-  getSortObj: function(sort) {
+  }
+  getSortObj() {
+    const sort = this.props.sort;
     const sortObj = {str: '', search:'', query: {}};
     if (sort !== '') {
       sortObj.str = sort;
@@ -38,10 +36,10 @@ let FiltersList = React.createClass({
       sortObj.query = {sort:sort};
     }
     return sortObj;
-  },
-  render: function() {
+  }
+  render() {
     let items = [];
-    const sortObj = this.getSortObj(this.props.sort);
+    const sortObj = this.getSortObj();
     const href = '/products/';
     const categoryId = this.props.categoryId;
     const allClassName = (categoryId === '') ? constants.SELECTED : '';
@@ -56,7 +54,7 @@ let FiltersList = React.createClass({
       </nav>
     );
   }
-});
+}
 
 function select(state) {
   state = state.toJS();

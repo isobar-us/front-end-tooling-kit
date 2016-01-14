@@ -19,8 +19,8 @@ function getNormalizedPath(path) {
   return path;
 }
 
-let App = React.createClass({
-  componentWillReceiveProps: function(props){
+class App extends React.Component {
+  componentWillReceiveProps(props){
     let location = props.location;
     let path = getNormalizedPath(location.pathname + location.search);
     if (path !== currentPath) {
@@ -28,15 +28,15 @@ let App = React.createClass({
       let store = getStore();
       store.dispatch({type:constants.URL_CHANGE, params:props.params, query:location.query, path:path});
     }
-  },
-  render: function() {
+  }
+  render() {
     return (
       <Wrapper>
         {this.props.children}
       </Wrapper>
     );
   }
-});
+}
 
 export let routes = (
   <Route component={App} path="/">
