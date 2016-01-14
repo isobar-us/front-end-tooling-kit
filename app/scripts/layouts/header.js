@@ -1,6 +1,6 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import FiltersList from '../components/filtersList';
+import FiltersList from '../components/filtersList/component';
 
 export default React.createClass({
   mixins: [PureRenderMixin],

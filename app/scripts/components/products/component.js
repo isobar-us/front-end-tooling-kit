@@ -2,6 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import {subscribe, unsubscribe} from '../../isomorphic';
+import {getStore} from '../../store';
 import {loadProducts} from './actionCreators';
 
 let ProductItem = React.createClass({
@@ -30,6 +31,11 @@ let Products = React.createClass({
   },
   componentDidMount: function() {
     unsubscribe(this.subscribeId);
+    let store = getStore();
+    store.subscribe(() => {
+      let state = store.getState().toJS();
+      loadProducts(state.url.params.categoryId, state.url.query.sort);
+    });
   },
   render: function() {
     let items = [];

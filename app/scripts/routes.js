@@ -2,7 +2,7 @@ import React from 'react';
 import {Route} from 'react-router';
 
 // Require App Modules
-import {setUrlState} from './creators';
+import {setUrlState} from './actionCreators';
 import Wrapper from './layouts/wrapper';
 import Products from './components/products/component';
 

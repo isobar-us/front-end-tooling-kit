@@ -3,7 +3,6 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux'
 import {Link} from 'react-router';
 import constants from '../constants';
-import {getSortObj} from '../creators';
 
 let SortList = React.createClass({
   mixins: [PureRenderMixin],
@@ -13,7 +12,7 @@ let SortList = React.createClass({
     if (this.props.categoryId !== '') {
       href = href + this.props.categoryId;
     }
-    switch (getSortObj(this.props.sort).str) {
+    switch (this.props.sort) {
       case 'priceasc':
         sortClasses.priceasc = constants.SELECTED;
         break;

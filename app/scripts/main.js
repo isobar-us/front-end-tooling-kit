@@ -9,7 +9,6 @@ let history = createHistory();
 
 // Require App Modules
 import {makeStore} from './store';
-import {bindStoreChange} from './creators';
 import {routes} from './routes';
 
 // create store, prepopulate with server data
@@ -19,7 +18,6 @@ Object.keys(state).forEach(key => {
   immutableState = immutableState.set(key, Map(state[key]));
 });
 let store = makeStore(immutableState);
-bindStoreChange(state.url.path);
 
 ReactDOM.render((
   <Provider store={store}>

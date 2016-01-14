@@ -2,9 +2,9 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import {getSortObj, loadCategories} from '../creators';
-import {subscribe, unsubscribe} from '../isomorphic';
-import constants from '../constants';
+import {subscribe, unsubscribe} from '../../isomorphic';
+import constants from '../../constants';
+import {loadCategories} from './actionCreators';
 
 let FilterItem = React.createClass({
   mixins: [PureRenderMixin],
@@ -28,9 +28,18 @@ let FiltersList = React.createClass({
   componentDidMount: function() {
     unsubscribe(this.subscribeId);
   },
+  getSortObj: function(sort) {
+    const sortObj = {str: '', search:'', query: {}};
+    if (sort !== '') {
+      sortObj.str = sort;
+      sortObj.search = '?sort='+sort;
+      sortObj.query = {sort:sort};
+    }
+    return sortObj;
+  },
   render: function() {
     let items = [];
-    const sortObj = getSortObj(this.props.sort);
+    const sortObj = this.getSortObj(this.props.sort);
     const href = '/products/';
     const categoryId = this.props.categoryId;
     const allClassName = (categoryId === '') ? constants.SELECTED : '';
