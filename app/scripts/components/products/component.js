@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import iso from '../../isomorphic';
 import {getStore} from '../../store';
 import {loadProducts} from './actionCreators';
+import {mountReducer} from './reducer';
 
 let ProductItem = React.createClass({
   mixins: [PureRenderMixin],
@@ -25,6 +26,7 @@ let ProductItem = React.createClass({
 let Products = React.createClass({
   mixins: [PureRenderMixin],
   componentWillMount: function() {
+    mountReducer();
     this.subscribeId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
       loadProducts(params.categoryId, query.sort, callbackFn);
     });

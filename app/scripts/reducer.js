@@ -1,10 +1,12 @@
 //import {combineReducers} from 'redux';
 import {Map, is} from 'immutable';
 import constants from './constants';
-import products from './components/products/reducer';
-import categories from './components/filtersList/reducer';
 
-let reducers = [categories, products];
+let reducers = [];
+
+export function combineReducer(fn) {
+  if (typeof fn === 'function') reducers.push(fn);
+}
 
 export default function reducer(state = Map(), action) {
   switch (action.type) {

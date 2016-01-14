@@ -5,6 +5,7 @@ import {Link} from 'react-router';
 import iso from '../../isomorphic';
 import constants from '../../constants';
 import {loadCategories} from './actionCreators';
+import {mountReducer} from './reducer';
 
 let FilterItem = React.createClass({
   mixins: [PureRenderMixin],
@@ -21,6 +22,7 @@ let FilterItem = React.createClass({
 let FiltersList = React.createClass({
   mixins: [PureRenderMixin],
   componentWillMount: function() {
+    mountReducer();
     this.subscribeId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
       loadCategories(callbackFn);
     });
