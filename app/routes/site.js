@@ -8,6 +8,7 @@ import createLocation from 'history/lib/createLocation';
 import {makeStore} from '../scripts/store';
 import iso from '../scripts/isomorphic';
 import {routes} from '../scripts/routes';
+import {titleDefault} from '../scripts/pageTitle';
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.get('/:path?/:categoryId?', function(req, res, next) {
     res.render('home', {
       markup: markup,
       initialState: encodeURI(JSON.stringify(initialState)),
-      title: 'Express App'
+      title: initialState.title || titleDefault
     });
   }
 
