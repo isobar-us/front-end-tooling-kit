@@ -2,6 +2,8 @@ import {Map} from 'immutable';
 import constants from '../../constants';
 import {combineReducer} from '../../reducer';
 
+let mounted = false;
+
 function reducer(state = Map(), action) {
   switch (action.type) {
     case constants.LOAD_CATEGORIES:
@@ -13,5 +15,8 @@ function reducer(state = Map(), action) {
 }
 
 export function mountReducer() {
-  combineReducer(reducer);
+  if (!mounted) {
+    combineReducer(reducer);
+    mounted = true;
+  }
 }

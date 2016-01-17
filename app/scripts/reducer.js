@@ -1,4 +1,3 @@
-//import {combineReducers} from 'redux';
 import {Map, is} from 'immutable';
 import constants from './constants';
 

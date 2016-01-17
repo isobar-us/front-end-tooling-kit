@@ -1,7 +1,7 @@
 import request from 'superagent';
 import constants from '../../constants';
 import {getStore} from '../../store';
-import {setPageTitle} from '../../pageTitle';
+import pageTitle from '../../pageTitle';
 
 let productsReq = null;
 
@@ -18,7 +18,7 @@ export function loadProducts(categoryId, sort, cbFn) {
   if (!state.products || ( (state.products.categoryId !== categoryId) || (state.products.sort !== sort) ) ) {
     if (productsReq !== null) productsReq.abort();
     store.dispatch({type:constants.LOAD_PRODUCTS, categoryId:categoryId, sort:sort});
-    setPageTitle(['Products', categoryId]);
+    pageTitle.set(['Products', categoryId]);
     let url = constants.API_URL_DEV + 'products/' + categoryId;
     if (sort !== '') url = url + '?sort=' + sort;
     productsReq = request.get(url).end( (err, resp) => {

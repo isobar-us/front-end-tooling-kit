@@ -8,7 +8,7 @@ import createLocation from 'history/lib/createLocation';
 import {makeStore} from '../scripts/store';
 import iso from '../scripts/isomorphic';
 import {routes} from '../scripts/routes';
-import {titleDefault} from '../scripts/pageTitle';
+import pageTitle from '../scripts/pageTitle';
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.get('/:path?/:categoryId?', function(req, res, next) {
     res.render('home', {
       markup: markup,
       initialState: encodeURI(JSON.stringify(initialState)),
-      title: initialState.title || titleDefault
+      title: initialState.title || pageTitle.getDefault()
     });
   }
 
@@ -51,8 +51,9 @@ router.get('/:path?/:categoryId?', function(req, res, next) {
     } else if (renderProps) {
       // create a data store with current url info
       let store = makeStore( Map({url:Map({params:req.params, query:req.query, path:req.originalUrl})}) );
-      // reset any isomorphic subscribers from previous page load
+      // reset any items from previous page load
       iso.reset();
+      pageTitle.init(store);
       // generate markup based on route. if any components require async data they will subscribe to iso object.
       let markup = getMarkupAsString(renderProps, store);
       // if there were subscribers, set up a doAsyncFns callback to regenerate markup once async loads are complete
