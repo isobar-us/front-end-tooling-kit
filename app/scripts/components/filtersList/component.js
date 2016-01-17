@@ -20,12 +20,12 @@ export class FilterItem extends React.Component {
 export class FiltersList extends React.Component {
   componentWillMount() {
     mountReducer();
-    this.subscribeId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
-      loadCategories(callbackFn);
-    });
-  }
-  componentDidMount() {
-    iso.unsubscribeAsyncFn(this.subscribeId);
+    if (iso.isServer()) {
+      this.isoId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
+        loadCategories(callbackFn);
+        iso.unsubscribeAsyncFn(this.isoId);
+      });
+    }
   }
   getSortObj() {
     const sort = this.props.sort;

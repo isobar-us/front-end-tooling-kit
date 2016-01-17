@@ -1,31 +1,42 @@
-let subscribers = [];
-let subscribersReadyCt = 0;
-let allSubscribersReady = function(){};
+let server;
+let subscribers;
+let subscribersCt;
+let subscribersReadyCt;
+let allSubscribersReady;
 
 function subscriberReady () {
   subscribersReadyCt++;
-  if (subscribersReadyCt === subscribers.length) allSubscribersReady();
+  if (subscribersReadyCt === subscribersCt) allSubscribersReady();
 }
 
 export default {
-  reset() {
-    subscribers = [];
+  init() {
+    server = true;
+    subscribers = {};
+    subscribersCt = 0;
     subscribersReadyCt = 0;
+    allSubscribersReady = function(){};
+  },
+  isServer() {
+    return server || false;
   },
   subscribeAsyncFn(fn) {
-    subscribers.push(fn);
-    return subscribers.length;
+    subscribersCt++;
+    subscribers[subscribersCt] = fn;
+    return subscribersCt;
   },
-  unsubscribeAsyncFn(id) {
-    subscribers[id] = null;
+  unsubscribeAsyncFn(key) {
+    delete subscribers[key];
   },
   hasAsyncFns() {
-    return ((subscribers.length !== 0) ? true : false);
+    return ((subscribersCt !== 0) ? true : false);
   },
   doAsyncFns(path, params, query, callbackFn) {
-    if (subscribers.length) {
+    let keys = Object.keys(subscribers);
+    if (keys.length) {
       allSubscribersReady = callbackFn;
-      subscribers.forEach(fn => {
+      keys.forEach(key => {
+        let fn = subscribers[key];
         if (typeof fn === 'function') fn(path, params, query, subscriberReady);
       });
     } else {

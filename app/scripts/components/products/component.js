@@ -24,19 +24,24 @@ export class ProductItem extends React.Component {
 export class Products extends React.Component {
   componentWillMount() {
     mountReducer();
-    this.subscribeId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
-      loadProducts(params.categoryId, query.sort, callbackFn);
-    });
+    if (iso.isServer()) {
+      this.isoId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
+        loadProducts(params.categoryId, query.sort, callbackFn);
+        iso.unsubscribeAsyncFn(this.isoId);
+      });
+    }
   }
   componentDidMount() {
-    iso.unsubscribeAsyncFn(this.subscribeId);
     let store = getStore();
     let state = store.getState().toJS();
     if (!state.products) loadProducts(state.url.params.categoryId, state.url.query.sort);
-    store.subscribe(() => {
+    this.unsubscribe = store.subscribe(() => {
       let state = store.getState().toJS();
       loadProducts(state.url.params.categoryId, state.url.query.sort);
     });
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
   }
   render() {
     let items = [];

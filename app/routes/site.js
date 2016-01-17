@@ -51,8 +51,8 @@ router.get('/:path?/:categoryId?', function(req, res, next) {
     } else if (renderProps) {
       // create a data store with current url info
       let store = makeStore( Map({url:Map({params:req.params, query:req.query, path:req.originalUrl})}) );
-      // reset any items from previous page load
-      iso.reset();
+      // initialize isomorphic methods and pageTitle management
+      iso.init();
       pageTitle.init(store);
       // generate markup based on route. if any components require async data they will subscribe to iso object.
       let markup = getMarkupAsString(renderProps, store);
