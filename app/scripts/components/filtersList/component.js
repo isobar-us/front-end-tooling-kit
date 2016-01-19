@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import iso from '../../isomorphic';
 import constants from '../../constants';
-import {loadCategories} from './actionCreators';
+import {loadCategories} from './actions';
 import {mountReducer} from './reducer';
 
 export class FilterItem extends React.Component {

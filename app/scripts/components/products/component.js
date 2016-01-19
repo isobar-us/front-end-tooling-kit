@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import iso from '../../isomorphic';
 import {getStore} from '../../store';
-import {loadProducts} from './actionCreators';
+import {loadProducts} from './actions';
 import {mountReducer} from './reducer';
 
 export class ProductItem extends React.Component {
