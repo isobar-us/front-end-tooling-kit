@@ -5,30 +5,8 @@ import {Route, IndexRoute} from 'react-router';
 import Wrapper from './layouts/wrapper';
 import Home from './components/home';
 import Products from './components/products/component';
-import constants from './constants';
-import {getStore} from './store';
-
-let currentPath;
-
-function getNormalizedPath(path) {
-  let pathLen = path.length;
-  let lastChar = path.charAt(pathLen-1);
-  if (lastChar === '/') {
-    path = path.substring(0, (pathLen-1));
-  }
-  return path;
-}
 
 class App extends React.Component {
-  componentWillReceiveProps(props){
-    let location = props.location;
-    let path = getNormalizedPath(location.pathname + location.search);
-    if (path !== currentPath) {
-      currentPath = path;
-      let store = getStore();
-      store.dispatch({type:constants.URL_CHANGE, params:props.params, query:location.query, path:path});
-    }
-  }
   render() {
     return (
       <Wrapper>

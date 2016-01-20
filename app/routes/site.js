@@ -42,23 +42,22 @@ router.get('/:path?/:categoryId?', function(req, res, next) {
     return markup;
   }
 
-  let location = createLocation(req.originalUrl);
+  let location = Object.assign({}, createLocation(req.originalUrl), {params:req.params, query:req.query});
   match({routes, location}, (error, redirectLocation, renderProps) => {
     if (error) {
       renderError(500, error.message);
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
-      // create a data store with current url info
-      let store = makeStore( Map({url:Map({params:req.params, query:req.query, path:req.originalUrl})}) );
       // initialize isomorphic methods and pageTitle management
+      let store = makeStore();
       iso.init();
       pageTitle.init(store);
       // generate markup based on route. if any components require async data they will subscribe to iso object.
       let markup = getMarkupAsString(renderProps, store);
       // if there were subscribers, set up a doAsyncFns callback to regenerate markup once async loads are complete
       if (iso.hasAsyncFns()) {
-        iso.doAsyncFns(req.originalUrl, req.params, req.query, function(){
+        iso.doAsyncFns(function(){
           renderSuccess(getMarkupAsString(renderProps, store), store.getState().toJS());
         });
       }

@@ -28,15 +28,11 @@ export class ProductItem extends React.Component {
 export class Products extends React.Component {
   componentWillMount() {
     mountReducer();
-    if (iso.isServer()) {
-      this.isoId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
-        this.props.dispatch( loadProducts(getNormalizedProp(params.categoryId), getNormalizedProp(query.sort), callbackFn) );
-        iso.unsubscribeAsyncFn(this.isoId);
-      });
-    }
-  }
-  componentDidMount() {
-    if (this.props.products.length === 0) this.props.dispatch( loadProducts(getNormalizedProp(this.props.params.categoryId), getNormalizedProp(this.props.location.query.sort)) );
+    iso.async((callbackFn) => {
+      if (this.props.products.length === 0) {
+        this.props.dispatch( loadProducts(getNormalizedProp(this.props.params.categoryId), getNormalizedProp(this.props.location.query.sort), callbackFn) );
+      }
+    });
   }
   componentWillReceiveProps(nextProps) {
     let categoryId = getNormalizedProp(nextProps.params.categoryId);

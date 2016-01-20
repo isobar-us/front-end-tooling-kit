@@ -9,8 +9,6 @@ export function combineReducer(fn) {
 
 export default function reducer(state = Map(), action) {
   switch (action.type) {
-    case constants.URL_CHANGE:
-      return state.set('url', Map({params:action.params, query:action.query, path:action.path}));
     case constants.DOC_TITLE_CHANGE:
       return state.set('title', action.title);
   }
