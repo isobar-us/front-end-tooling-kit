@@ -22,7 +22,7 @@ export class FiltersList extends React.Component {
     mountReducer();
     if (iso.isServer()) {
       this.isoId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
-        loadCategories(callbackFn);
+        this.props.dispatch( loadCategories(callbackFn) );
         iso.unsubscribeAsyncFn(this.isoId);
       });
     }

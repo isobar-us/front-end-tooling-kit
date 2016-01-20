@@ -1,9 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import iso from '../../isomorphic';
-import {getStore} from '../../store';
 import {loadProducts} from './actions';
 import {mountReducer} from './reducer';
+
+function getNormalizedProp(prop) {
+  if (typeof prop === 'undefined') prop = '';
+  return prop;
+}
 
 export class ProductItem extends React.Component {
   render() {
@@ -26,22 +30,20 @@ export class Products extends React.Component {
     mountReducer();
     if (iso.isServer()) {
       this.isoId = iso.subscribeAsyncFn((path, params, query, callbackFn) => {
-        loadProducts(params.categoryId, query.sort, callbackFn);
+        this.props.dispatch( loadProducts(getNormalizedProp(params.categoryId), getNormalizedProp(query.sort), callbackFn) );
         iso.unsubscribeAsyncFn(this.isoId);
       });
     }
   }
   componentDidMount() {
-    let store = getStore();
-    let state = store.getState().toJS();
-    if (!state.products) loadProducts(state.url.params.categoryId, state.url.query.sort);
-    this.unsubscribe = store.subscribe(() => {
-      let state = store.getState().toJS();
-      loadProducts(state.url.params.categoryId, state.url.query.sort);
-    });
+    if (this.props.products.length === 0) this.props.dispatch( loadProducts(getNormalizedProp(this.props.params.categoryId), getNormalizedProp(this.props.location.query.sort)) );
   }
-  componentWillUnmount() {
-    this.unsubscribe();
+  componentWillReceiveProps(nextProps) {
+    let categoryId = getNormalizedProp(nextProps.params.categoryId);
+    let sort = getNormalizedProp(nextProps.location.query.sort);
+    if ( (categoryId !== nextProps.categoryId) || (sort !== nextProps.sort) ) {
+      this.props.dispatch( loadProducts(categoryId, sort) );
+    }
   }
   render() {
     let items = [];
@@ -59,6 +61,8 @@ export class Products extends React.Component {
 function select(state) {
   state = state.toJS();
   return {
+    categoryId: ((state.products) ? state.products.categoryId : ''),
+    sort: ((state.products) ? state.products.sort : ''),
     products: ((state.products) ? state.products.items : []),
     loading: ((state.products) ? state.products.loading : false)
   };
