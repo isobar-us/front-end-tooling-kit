@@ -14,11 +14,12 @@ export default {
     subscribers = [];
     subscribersReadyCt = 0;
   },
-  async(fn) {
+  async(dispatch, fn, data) {
+    if (!Array.isArray(data)) data = [];
     if (allowSubscribe) {
-      subscribers.push(fn);
+      subscribers.push({dispatch, fn, data});
     } else {
-      fn();
+      dispatch(fn(...data));
     }
   },
   hasAsyncFns() {
@@ -28,8 +29,8 @@ export default {
     allowSubscribe = false;
     if (subscribers.length) {
       allSubscribersReady = callbackFn;
-      subscribers.forEach(fn => {
-        if (typeof fn === 'function') fn(subscriberReady);
+      subscribers.forEach(obj => {
+        obj.dispatch(obj.fn(...obj.data, subscriberReady));
       });
     } else {
       callbackFn();

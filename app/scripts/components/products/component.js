@@ -1,13 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import iso from '../../isomorphic';
-import {loadProducts} from './actions';
+import {loadProducts, getNormalizedProp} from './actions';
 import {mountReducer} from './reducer';
-
-function getNormalizedProp(prop) {
-  if (typeof prop === 'undefined') prop = '';
-  return prop;
-}
 
 export class ProductItem extends React.Component {
   render() {
@@ -28,11 +23,9 @@ export class ProductItem extends React.Component {
 export class Products extends React.Component {
   componentWillMount() {
     mountReducer();
-    iso.async((callbackFn) => {
-      if (this.props.products.length === 0) {
-        this.props.dispatch( loadProducts(getNormalizedProp(this.props.params.categoryId), getNormalizedProp(this.props.location.query.sort), callbackFn) );
-      }
-    });
+    if (this.props.products.length === 0) {
+      iso.async( this.props.dispatch, loadProducts, [this.props.params.categoryId, this.props.location.query.sort] );
+    }
   }
   componentWillReceiveProps(nextProps) {
     let categoryId = getNormalizedProp(nextProps.params.categoryId);
