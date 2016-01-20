@@ -4,7 +4,8 @@ import {Link} from 'react-router';
 import iso from '../../isomorphic';
 import constants from '../../constants';
 import {loadCategories} from './actions';
-import {mountReducer} from './reducer';
+import reducer from './reducer';
+import {combineReducer} from '../../reducer';
 
 export class FilterItem extends React.Component {
   render() {
@@ -19,7 +20,7 @@ export class FilterItem extends React.Component {
 
 export class FiltersList extends React.Component {
   componentWillMount() {
-    mountReducer();
+    combineReducer(reducer);
     if (this.props.categories.length === 0) {
       iso.async( this.props.dispatch, loadCategories, [] );
     }

@@ -2,7 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import iso from '../../isomorphic';
 import {loadProducts, getNormalizedProp} from './actions';
-import {mountReducer} from './reducer';
+import reducer from './reducer';
+import {combineReducer} from '../../reducer';
 
 export class ProductItem extends React.Component {
   render() {
@@ -22,7 +23,7 @@ export class ProductItem extends React.Component {
 
 export class Products extends React.Component {
   componentWillMount() {
-    mountReducer();
+    combineReducer(reducer);
     if (this.props.products.length === 0) {
       iso.async( this.props.dispatch, loadProducts, [this.props.params.categoryId, this.props.location.query.sort] );
     }
