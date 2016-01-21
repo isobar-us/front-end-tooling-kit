@@ -14,14 +14,6 @@ export default {
     subscribers = [];
     subscribersReadyCt = 0;
   },
-  async(dispatch, fn, data) {
-    if (!Array.isArray(data)) data = [];
-    if (allowSubscribe) {
-      subscribers.push({dispatch, fn, data});
-    } else {
-      dispatch(fn(...data));
-    }
-  },
   hasAsyncFns() {
     return (subscribers.length !== 0);
   },
@@ -30,10 +22,19 @@ export default {
     if (subscribers.length) {
       allSubscribersReady = callbackFn;
       subscribers.forEach(obj => {
-        obj.dispatch(obj.fn(...obj.data, subscriberReady));
+        obj.action(obj.dispatch, obj.getState, subscriberReady);
       });
     } else {
       callbackFn();
+    }
+  },
+  middleware: store => next => action => {
+    if (!action.async) {
+      return next(action);
+    } else if (allowSubscribe) {
+      subscribers.push({action:action.async, dispatch:store.dispatch, getState:store.getState});
+    } else {
+      return action.async(store.dispatch, store.getState, function(){});
     }
   }
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import iso from '../../isomorphic';
 import constants from '../../constants';
 import {loadCategories} from './actions';
 import reducer from './reducer';
@@ -22,7 +21,7 @@ export class FiltersList extends React.Component {
   componentWillMount() {
     combineReducer(reducer);
     if (this.props.categories.length === 0) {
-      iso.async( this.props.dispatch, loadCategories, [] );
+      this.props.dispatch( loadCategories() );
     }
   }
   getSortObj() {
